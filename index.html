@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copilot Studio to 21V F&O MCP Guide</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --panel: #ffffff;
+      --text: #17202a;
+      --muted: #5b6470;
+      --line: #dde3ea;
+      --brand: #0063b1;
+      --brand-soft: #e8f1fb;
+      --good: #107c10;
+      --warn: #b85c00;
+      --code: #0f1720;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, #d9ecff 0, transparent 26%),
+        linear-gradient(180deg, #edf5fc 0%, var(--bg) 220px);
+    }
+
+    .hero {
+      padding: 56px 24px 36px;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .hero-inner,
+    .content {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.75);
+      color: var(--brand);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.05;
+      max-width: 900px;
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 860px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.7;
+    }
+
+    .content {
+      padding: 28px 24px 72px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(16, 24, 40, 0.04);
+    }
+
+    .span-12 { grid-column: span 12; }
+    .span-8 { grid-column: span 8; }
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 1.35rem;
+    }
+
+    h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    ul, ol {
+      margin: 10px 0 0 20px;
+      padding: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .mono,
+    code,
+    pre {
+      font-family: Consolas, "SFMono-Regular", Menlo, monospace;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 10px 16px;
+      padding-top: 6px;
+    }
+
+    .kv div {
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .kv .key {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f3f5f7;
+      color: var(--text);
+      font-size: 0.9rem;
+      border: 1px solid var(--line);
+    }
+
+    .tag.good {
+      background: #edf8ed;
+      color: var(--good);
+      border-color: #cce7cc;
+    }
+
+    .tag.warn {
+      background: #fff4e8;
+      color: var(--warn);
+      border-color: #f5d3ae;
+    }
+
+    pre {
+      margin: 12px 0 0;
+      padding: 16px;
+      overflow-x: auto;
+      background: var(--code);
+      color: #e5edf7;
+      border-radius: 14px;
+      line-height: 1.55;
+      font-size: 0.92rem;
+    }
+
+    .diagram {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .node {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff, #f8fbfe);
+    }
+
+    .arrow {
+      text-align: center;
+      color: var(--brand);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .footer {
+      margin-top: 26px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 880px) {
+      .span-8, .span-6, .span-4 {
+        grid-column: span 12;
+      }
+
+      .kv {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Public Integration Guide</div>
+      <h1>How Copilot Studio Connects to 21V Finance and Operations MCP</h1>
+      <p class="lede">
+        This guide explains the working integration pattern used to connect Microsoft Copilot Studio to a 21Vianet Dynamics 365 Finance and Operations MCP endpoint. It covers the hosted MCP proxy pattern, the key Copilot Studio configuration values, the Azure deployment shape, and the token refresh model required to keep the connection alive.
+      </p>
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="grid">
+      <article class="card span-8">
+        <h2>Why a Proxy Is Needed</h2>
+        <p>
+          The 21V Finance and Operations MCP endpoint runs behind China sovereign cloud identity infrastructure. In practice, direct client connectivity is not reliable enough for Copilot Studio because the runtime must successfully initialize MCP, retrieve tools, and keep backend authorization valid over time.
+        </p>
+        <p>
+          The working solution is a hosted MCP proxy. Copilot Studio connects to the proxy over HTTPS, and the proxy connects to the real 21V F&amp;O MCP backend with a valid bearer token. The proxy is also responsible for refreshing that backend token automatically.
+        </p>
+        <div class="tag-row">
+          <span class="tag good">Copilot Studio compatible</span>
+          <span class="tag good">Hosted on Azure App Service</span>
+          <span class="tag good">Automatic backend token refresh</span>
+          <span class="tag warn">Do not publish secrets</span>
+        </div>
+      </article>
+
+      <article class="card span-4">
+        <h2>Current Public Endpoint</h2>
+        <div class="kv">
+          <div class="key">Proxy base URL</div>
+          <div class="mono">https://21vfnomcp001.azurewebsites.net/</div>
+
+          <div class="key">MCP server URL</div>
+          <div class="mono">https://21vfnomcp001.azurewebsites.net/mcp</div>
+
+          <div class="key">Health endpoint</div>
+          <div class="mono">https://21vfnomcp001.azurewebsites.net/health</div>
+
+          <div class="key">Inbound auth mode</div>
+          <div>None</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="card span-12">
+        <h2>Architecture</h2>
+        <div class="diagram">
+          <div class="node"><strong>Copilot Studio</strong><br>Calls the public MCP URL and discovers tools through MCP initialize and tools/list.</div>
+          <div class="arrow">↓</div>
+          <div class="node"><strong>Hosted MCP Proxy</strong><br>Azure App Service proxy that terminates the public MCP request, maintains backend MCP session state, and injects a valid bearer token for the 21V backend.</div>
+          <div class="arrow">↓</div>
+          <div class="node"><strong>21V Entra Token Flow</strong><br>Refresh token exchanged against <span class="mono">login.partner.microsoftonline.cn</span> to obtain new access tokens before expiry.</div>
+          <div class="arrow">↓</div>
+          <div class="node"><strong>21V F&amp;O MCP Backend</strong><br><span class="mono">https://dynamicsfo.sandbox.operations.dynamics.cn/mcp</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="card span-6">
+        <h2>Copilot Studio MCP Values</h2>
+        <div class="kv">
+          <div class="key">Server name</div>
+          <div class="mono">21V-FO-MCP-20260401</div>
+
+          <div class="key">Server description</div>
+          <div>21V Finance and Operations MCP</div>
+
+          <div class="key">Server URL</div>
+          <div class="mono">https://21vfnomcp001.azurewebsites.net/mcp</div>
+
+          <div class="key">Authentication</div>
+          <div>None</div>
+        </div>
+        <p class="footer">
+          Recommendation: keep the server name alphanumeric with only <span class="mono">-</span> or <span class="mono">_</span>. Do not use <span class="mono">&amp;</span> in the connector name.
+        </p>
+      </article>
+
+      <article class="card span-6">
+        <h2>Azure App Service Configuration Values</h2>
+        <div class="kv">
+          <div class="key">Bridge__BackendUrl</div>
+          <div class="mono">https://dynamicsfo.sandbox.operations.dynamics.cn/mcp</div>
+
+          <div class="key">Bridge__TenantId</div>
+          <div class="mono">5a300e7d-1d1e-4e2d-b22d-0d38d540cf96</div>
+
+          <div class="key">Bridge__ClientId</div>
+          <div class="mono">9ebf36c0-8664-4b9a-b8a4-550205345fe9</div>
+
+          <div class="key">Bridge__TokenEndpoint</div>
+          <div class="mono">https://login.partner.microsoftonline.cn/5a300e7d-1d1e-4e2d-b22d-0d38d540cf96/oauth2/v2.0/token</div>
+
+          <div class="key">Bridge__RequestedScope</div>
+          <div class="mono">https://dynamicsfo.sandbox.operations.dynamics.cn/.default offline_access openid profile</div>
+
+          <div class="key">Bridge__TokenCachePath</div>
+          <div class="mono">D:\home\site\wwwroot\token-cache\dynamicsfo-21v-token-cache.json</div>
+
+          <div class="key">Bridge__AccessToken</div>
+          <div>Required as current bootstrap token. Secret. Do not publish.</div>
+
+          <div class="key">Bridge__RefreshToken</div>
+          <div>Required for automatic renewal. Secret. Do not publish.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="card span-6">
+        <h2>Token Refresh Model</h2>
+        <p>
+          The hosted proxy is now designed to refresh the backend 21V token automatically. This avoids the earlier behavior where the proxy worked for a short time and then failed when the access token expired.
+        </p>
+        <ol>
+          <li>The proxy starts with the current access token and a valid refresh token.</li>
+          <li>Before the cached token expires, the proxy calls the 21V token endpoint.</li>
+          <li>A new access token is issued and persisted to the site-local cache file.</li>
+          <li>The proxy continues forwarding MCP traffic without requiring manual updates in App Service.</li>
+        </ol>
+      </article>
+
+      <article class="card span-6">
+        <h2>What Makes the Integration Stable</h2>
+        <ul>
+          <li>The public endpoint remains constant for Copilot Studio.</li>
+          <li>The proxy stores backend MCP session identifiers and reuses them when needed.</li>
+          <li>The proxy refreshes the backend bearer token instead of relying on a manually pasted token.</li>
+          <li>Copilot Studio only needs a normal MCP server URL and does not need to understand 21V identity details.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="card span-8">
+        <h2>Implementation Flow</h2>
+        <ol>
+          <li>Deploy the MCP proxy to Azure App Service.</li>
+          <li>Configure the backend URL, tenant ID, client ID, token endpoint, scope, current access token, and refresh token.</li>
+          <li>Verify the proxy health endpoint returns <span class="mono">status: ok</span>.</li>
+          <li>Verify MCP initialize and tools/list against the public MCP URL.</li>
+          <li>Add the MCP server in Copilot Studio with the public MCP URL.</li>
+          <li>Confirm tool discovery succeeds.</li>
+          <li>Run a narrow business query such as metadata lookup or purchase-order discovery.</li>
+        </ol>
+      </article>
+
+      <article class="card span-4">
+        <h2>Validation Checks</h2>
+        <ul>
+          <li><span class="mono">GET /health</span> returns 200</li>
+          <li><span class="mono">POST /mcp initialize</span> returns 200</li>
+          <li><span class="mono">POST /mcp tools/list</span> returns the 21V F&amp;O tool set</li>
+          <li>Copilot Studio shows the discovered tools under the MCP tool page</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="card span-12">
+        <h2>Example MCP Verification Payload</h2>
+<pre>{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "initialize",
+  "params": {
+    "protocolVersion": "2024-11-05",
+    "capabilities": {},
+    "clientInfo": {
+      "name": "terminal-test",
+      "version": "1.0"
+    }
+  }
+}</pre>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="card span-12">
+        <h2>Security Notes</h2>
+        <p>
+          This public guide intentionally includes only non-secret configuration values. Do not publish access tokens, refresh tokens, API keys, or any tenant-specific secret material in a public repository. If this solution is promoted beyond testing, inbound authentication and stronger operational controls should be added to the hosted proxy.
+        </p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
